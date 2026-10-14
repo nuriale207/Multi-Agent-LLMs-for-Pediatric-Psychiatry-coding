@@ -1,7 +1,8 @@
 # Multi-agent LLM prompting pipeline (Qwen2.5-7B-Instruct)
 
-An alternative to the fine-tuned transformer classifiers in `../` (see the
-[top-level README](../../README.md)): instead of training a model, this
+An alternative to the fine-tuned transformer classifiers in
+[`../transformer_classification/`](../transformer_classification/README.md)
+(see the [top-level README](../README.md)): instead of training a model, this
 pipeline prompts **Qwen2.5-7B-Instruct** in a chain of roles ("agents") to
 extract diagnoses from a note, map them to ICD-10 Chapter V ("F") codes, and
 aggregate codes across a patient's notes — optionally with further LLM agents
@@ -44,7 +45,7 @@ step1_extraction.py  →  step2_note_codes.py  →  step3_patient_codes.py
      the top passages and picks the final code.
 
 ```bash
-cd src/llm_prompting
+cd llm_prompting
 python step1_extraction.py --input dev.csv --reference ICDstandard.csv
 # or
 python step1_extraction.py --input dev.csv --reference guidelines.txt
@@ -93,9 +94,10 @@ python step3_patient_codes.py --input dev_step1_icd_standard_step2_threshold0.8.
 Output: `<input>_step3_<method>.csv`, one row per patient, with `gold_codes`
 (ground-truth union of "F" codes from `COD_CIE_10`) and `final_codes` — ready
 to compare with e.g. `sklearn.metrics.precision_recall_fscore_support` or the
-evaluation scripts in `../` (format the two columns as `note_codes`-style
-JSON lists and adapt an evaluation script's loader, or compute metrics
-directly from `gold_codes`/`final_codes`).
+evaluation scripts in [`../transformer_classification/`](../transformer_classification/)
+(format the two columns as `note_codes`-style JSON lists and adapt an
+evaluation script's loader, or compute metrics directly from
+`gold_codes`/`final_codes`).
 
 ## `llm_utils.py`
 
@@ -115,7 +117,7 @@ needs roughly 16GB of GPU memory at bfloat16.
 ## Installation
 
 Use a **separate environment** from the fine-tuned-transformer pipeline — see
-[`requirements-prompting.txt`](../../requirements-prompting.txt):
+[`requirements-prompting.txt`](requirements-prompting.txt):
 
 ```bash
 conda create -n psychiatry_prompting python=3.10

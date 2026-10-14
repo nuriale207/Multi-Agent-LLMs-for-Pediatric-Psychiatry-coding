@@ -31,7 +31,7 @@ GRAD_ACCUM=2
 OUTPUT_DIR="./Experiments_data/"
 EXPERIMENT_NAME="my_experiment"
 
-SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/src"
+SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ── Train ─────────────────────────────────────────────────────────────────────
 python "$SRC_DIR/Train_transformer.py" \
