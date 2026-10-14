@@ -1,0 +1,23 @@
+{
+  "experiments_base": "/path/to/Experiments_data",
+  "experiments": [
+    {
+      "name": "notes_bert_base",
+      "test_csv": "/path/to/test_notes.csv",
+      "patient_level": false,
+      "labels_start_index": 15
+    },
+    {
+      "name": "notes_bert_extended",
+      "test_csv": "/path/to/test_notes.csv",
+      "patient_level": false,
+      "labels_start_index": 15
+    },
+    {
+      "name": "patient_longformer_clinical",
+      "test_csv": "/path/to/test_patient_level.csv",
+      "patient_level": true,
+      "labels_start_index": 15
+    }
+  ]
+}

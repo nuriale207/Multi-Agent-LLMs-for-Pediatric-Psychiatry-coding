@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.idea/
+.vscode/
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Data and experiment outputs — never commit real data or model artifacts
+*.csv
+*.tsv
+!configs/*.json
+Experiments_data/
+tmp_trainer/
+*.log
+*.ckpt
+*.bin
+*.pt
+*.safetensors

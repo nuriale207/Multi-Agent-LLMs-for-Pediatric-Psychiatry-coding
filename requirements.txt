@@ -1,0 +1,27 @@
+# Install PyTorch separately, matching your CUDA version:
+# https://pytorch.org/get-started/locally/
+#
+# This project was developed and tested with torch==1.10.0 (CUDA 10.2) and
+# torch>=2.6.0 on newer CUDA setups. Any torch version compatible with
+# transformers==4.26.1 below should work.
+
+# Core training
+transformers==4.26.1
+accelerate==0.34.2
+datasets==2.21.0
+tokenizers==0.13.3
+safetensors==0.4.4
+huggingface-hub==0.24.7
+
+# Data
+pandas==1.5.3
+numpy==1.26.4
+scikit-learn==1.5.1
+
+# transformers dependencies
+regex==2024.7.24
+filelock==3.15.4
+packaging==24.1
+PyYAML==6.0.2
+tqdm==4.66.5
+requests==2.32.3
