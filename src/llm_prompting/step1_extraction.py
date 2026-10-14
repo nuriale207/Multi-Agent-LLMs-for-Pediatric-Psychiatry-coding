@@ -28,11 +28,53 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from llm_utils import run_batch, parse_json
 
-EXTRACTOR_SYSTEM_PROMPT = "<extractor_agent_system_prompt>"
-EXTRACTOR_USER_PROMPT = "<extractor_agent_user_prompt>"  # fields: {note}
+EXTRACTOR_SYSTEM_PROMPT = """You are a clinical information extraction assistant. Your task is to extract diagnostic information from a single clinical note that belongs to a longitudinal patient record.
 
-PASSAGE_SYSTEM_PROMPT = "<passage_retrieval_agent_system_prompt>"
-PASSAGE_USER_PROMPT = "<passage_retrieval_agent_user_prompt>"  # fields: {diagnosis_name}, {status}, {retrieved_context}
+IMPORTANT CONTEXT: You will only see ONE note at a time. Each note is part of a larger series. Extract only what is explicitly stated or directly inferable from THIS note. Do not invent, assume, or carry over information not present in the current text.
+
+Output your extraction strictly in the following JSON structure:
+
+{"diagnoses": [
+    {
+        "name": "<diagnosis name>",
+        "icd_hint": "<ICD-10 code-related information if mentioned or inferrable, else null>",
+        "status": "<new | ongoing | resolved | suspected | ruled out>"
+    }
+    ]
+}
+
+Rules:
+- Use null for any field not found in the note. Do not guess. Fill all the fields, even if no information is found, but use null for those.
+- Output only valid JSON. Begin your response with {" and include no prose before or after the JSON block."""
+
+EXTRACTOR_USER_PROMPT = """Extract diagnose information from the following clinical note. Follow the system instructions exactly.
+
+--- BEGIN NOTE ---
+{note}
+--- END NOTE ---"""  # fields: {note}
+
+PASSAGE_SYSTEM_PROMPT = """You are an expert clinical coding assistant specializing in the ICD-10 classification system.
+Your job is to analyze the provided patient diagnosis record and use the attached reference text passages to determine the most exact, accurate ICD-10 code(s).
+
+Guidelines:
+- Rely strictly on the provided context passages. Do not invent codes.
+- Select codes with the highest level of detail/specificity possible (e.g., matching subcategories down to the decimal point if supported by text).
+- Respond in a structured JSON markdown format containing the final assigned code, description, and clinical reasoning.
+"""
+
+PASSAGE_USER_PROMPT = """Patient Diagnosis to Code: "{diagnosis_name}" (Status: {status})
+
+Reference Passages from ICD-10 Documentation:
+{retrieved_context}
+
+Based on the diagnosis and the reference text above, provide the most accurate ICD-10 code assignment.
+Return your response strictly in JSON format as follows:
+{{
+    "assigned_code": "CODE_HERE",
+    "description": "DESCRIPTION_HERE",
+    "reasoning": "Brief explanation mapping clinical details to the code."
+}}
+"""  # fields: {diagnosis_name}, {status}, {retrieved_context}
 
 
 # ─────────────────────────────────────────────────────────────────────────────

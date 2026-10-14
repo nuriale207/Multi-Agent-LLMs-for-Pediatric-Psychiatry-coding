@@ -7,12 +7,11 @@ extract diagnoses from a note, map them to ICD-10 Chapter V ("F") codes, and
 aggregate codes across a patient's notes — optionally with further LLM agents
 reviewing and reconciling disagreements.
 
-**The exact prompt text (system + user prompts for every agent) is reported
-in the paper's appendix, not duplicated here.** Every prompt in this code is
-a placeholder constant named `"<...>"` — before running anything, copy the
-corresponding prompt text from the paper into these constants:
+**The exact prompt text for every agent is included directly in the code**
+(also reported in the paper's appendix) as the constants below — no
+placeholders to fill in:
 
-| Placeholder                          | File                    | Agent                           |
+| Constant                              | File                    | Agent                           |
 |---------------------------------------|-------------------------|----------------------------------|
 | `EXTRACTOR_SYSTEM_PROMPT` / `_USER_PROMPT` | `step1_extraction.py`   | Clinical Information Extractor   |
 | `PASSAGE_SYSTEM_PROMPT` / `_USER_PROMPT`   | `step1_extraction.py`   | Relevant Passage Retrieval Agent |

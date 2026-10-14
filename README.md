@@ -16,12 +16,14 @@ free-text clinical notes, accompanying the paper:
 ```
 
 This repository contains **only the code**: it does not include the trained
-model weights, the clinical data used in the paper, or the exact LLM prompt
-text (reported in the paper's appendix), all of which are either private or
-live in the manuscript itself — see [Data availability](#data-availability)
-and [`src/llm_prompting/README.md`](src/llm_prompting/README.md). What it
-does provide is two complete, dataset-agnostic pipelines that reproduce the
-paper's two approaches on **any** dataset that follows the same CSV format:
+model weights or the clinical data used in the paper, both of which are
+private — see [Data availability](#data-availability). The exact LLM prompt
+text for the multi-agent pipeline (also reported in the paper's appendix) is
+included directly in the code — see
+[`src/llm_prompting/README.md`](src/llm_prompting/README.md). What this
+repository does provide is two complete, dataset-agnostic pipelines that
+reproduce the paper's two approaches on **any** dataset that follows the
+same CSV format:
 
 - **`src/`** — fine-tuned transformer classifiers (BERT / Longformer):
   train, test, re-binarize, and evaluate (micro/macro F1, patient
@@ -130,9 +132,10 @@ To replicate the paper's experiments, you need access to one of these
 with any dataset that follows that format.
 
 The exact system/user prompts used by the Qwen2.5 agents in
-`src/llm_prompting/` are reported in the paper's appendix rather than
-duplicated here; see [`src/llm_prompting/README.md`](src/llm_prompting/README.md)
-for which placeholder constant each one fills in.
+`src/llm_prompting/` are included directly in that code (and also reported
+in the paper's appendix); see
+[`src/llm_prompting/README.md`](src/llm_prompting/README.md) for which
+constant holds each agent's prompt.
 
 ## Usage
 
