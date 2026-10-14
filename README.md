@@ -1,8 +1,7 @@
-# Psychiatric diagnosis classification from clinical notes
+# Multi-agent LLMs and fine-tuned transformers for pediatric psychiatry coding
 
-Code to train and evaluate transformer-based multi-label classifiers that predict
-psychiatric ICD-10 ("F" chapter) diagnostic codes from free-text clinical notes,
-accompanying the paper:
+Code to predict psychiatric ICD-10 ("F" chapter) diagnostic codes from
+free-text clinical notes, accompanying the paper:
 
 > _Add full citation here once available (authors, title, venue, year, DOI)._
 
@@ -17,11 +16,21 @@ accompanying the paper:
 ```
 
 This repository contains **only the code**: it does not include the trained
-model weights or the clinical data used in the paper, both of which are
-private (see [Data availability](#data-availability) below). What it does
-provide is a complete, generic pipeline that reproduces the exact training
-setup, hyperparameters and evaluation metrics used in the paper on **any**
-dataset that follows the same CSV format.
+model weights, the clinical data used in the paper, or the exact LLM prompt
+text (reported in the paper's appendix), all of which are either private or
+live in the manuscript itself — see [Data availability](#data-availability)
+and [`src/llm_prompting/README.md`](src/llm_prompting/README.md). What it
+does provide is two complete, dataset-agnostic pipelines that reproduce the
+paper's two approaches on **any** dataset that follows the same CSV format:
+
+- **`src/`** — fine-tuned transformer classifiers (BERT / Longformer):
+  train, test, re-binarize, and evaluate (micro/macro F1, patient
+  aggregation, demographic breakdown, note-voting). Documented below.
+- **`src/llm_prompting/`** — a multi-agent prompting pipeline built on
+  **Qwen2.5-7B-Instruct**: an extraction agent pulls diagnoses out of each
+  note, retrieval matches them to ICD-10 codes, and (optionally) further
+  agents review and reconcile the patient-level code list. See
+  [`src/llm_prompting/README.md`](src/llm_prompting/README.md).
 
 ## Repository structure
 
@@ -35,14 +44,27 @@ dataset that follows the same CSV format.
 │   ├── evaluate_by_demographics.py               # per-patient F1 broken down by sex / age bin
 │   ├── evaluate_voting_label_f1.py                # per-label F1 under a note-voting strategy
 │   ├── evaluate_voting_threshold.py               # per-patient F1 under a note-voting strategy
-│   └── utils/                                     # data loading/tokenization used by Train_transformer.py
+│   ├── utils/                                     # data loading/tokenization used by Train_transformer.py
+│   └── llm_prompting/                             # Qwen2.5 multi-agent prompting pipeline (see its own README)
+│       ├── llm_utils.py
+│       ├── step1_extraction.py
+│       ├── step2_note_codes.py
+│       ├── step3_patient_codes.py
+│       └── README.md
 ├── configs/
 │   └── experiments.example.json                  # template for the batch-mode evaluation scripts
 ├── scripts/
 │   └── run_pipeline_example.sh                   # end-to-end example: train -> test -> evaluate
-├── requirements.txt
+├── requirements.txt                               # fine-tuned transformer pipeline (src/)
+├── requirements-prompting.txt                     # Qwen2.5 prompting pipeline (src/llm_prompting/)
 └── LICENSE
 ```
+
+The rest of this README documents the **fine-tuned transformer pipeline**
+(`src/`). For the **Qwen2.5 prompting pipeline**, see
+[`src/llm_prompting/README.md`](src/llm_prompting/README.md) — it uses a
+separate environment (`requirements-prompting.txt`) since Qwen2.5 needs a
+much newer `transformers` than the fine-tuning pipeline.
 
 ## Installation
 
@@ -106,6 +128,11 @@ To replicate the paper's experiments, you need access to one of these
 (or an equivalent) dataset, reformatted to match the
 [expected data format](#expected-data-format) above. The code itself works
 with any dataset that follows that format.
+
+The exact system/user prompts used by the Qwen2.5 agents in
+`src/llm_prompting/` are reported in the paper's appendix rather than
+duplicated here; see [`src/llm_prompting/README.md`](src/llm_prompting/README.md)
+for which placeholder constant each one fills in.
 
 ## Usage
 

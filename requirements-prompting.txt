@@ -1,0 +1,16 @@
+# Dependencies for src/llm_prompting/ (Qwen2.5 multi-agent prompting pipeline).
+#
+# This needs a much newer `transformers` than requirements.txt (the fine-tuned
+# BERT/Longformer pipeline), since Qwen2.5 support was only added in
+# transformers>=4.43. Use a separate virtual environment for the two pipelines:
+#
+#   conda create -n psychiatry_prompting python=3.10
+#   conda activate psychiatry_prompting
+#   pip install torch --index-url <your-cuda-specific-index>
+#   pip install -r requirements-prompting.txt
+
+transformers>=4.43.0
+accelerate>=0.34.0
+pandas>=1.5.3
+numpy>=1.26.4
+scikit-learn>=1.5.1
